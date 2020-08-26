@@ -1,7 +1,7 @@
 const getFile = require('../utils/getFile');
 const path = require('path');
 
-const getCards = (req, res) => getFile(path.join(__dirname, '../data/cards.json'))
+const getUsers = (req, res) => getFile(path.join(__dirname, '../data/users.json'))
   .then(users => {
     res
     .status(200)
@@ -12,7 +12,7 @@ const getCards = (req, res) => getFile(path.join(__dirname, '../data/cards.json'
       .send({ message: `Упс, ошибочка ${err}` })
   });
 
-  const getUser = (req, res) => getFile(path.join(__dirname, '../data/cards.json'))
+  const getUser = (req, res) => getFile(path.join(__dirname, '../data/users.json'))
     .then(users => {
       const currentUser = JSON.parse(users.find(user => user._id === req.params.id));
       if (currentUser) {
@@ -30,4 +30,4 @@ const getCards = (req, res) => getFile(path.join(__dirname, '../data/cards.json'
       .send({ message: `Упс, ошибочка ${err}` })
     })
 
-  module.exports = {getUsers, getUser};
+  module.exports = { getUsers, getUser };

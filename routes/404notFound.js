@@ -1,9 +1,9 @@
-const router = require('express').Router();
+const notFoundRouter = require('express').Router();
 
-router.get('/', (req, res) => {
+notFoundRouter.get('/', (req, res) => {
   res
     .status(404)
     .send({message: 'Страница не найдена'})
 });
 
-module.exports = router;
+module.exports = notFoundRouter;
