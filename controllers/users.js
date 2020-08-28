@@ -16,7 +16,7 @@ const getUsers = (req, res) => getFile(path.join(__dirname, '../data/users.json'
     .then(users => {
       const currentUser = JSON.parse(users.find(user => user._id === req.params.id));
       if (currentUser) {
-        res
+        return res
           .status(200)
           .send(currentUser);
       }
