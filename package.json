@@ -4,23 +4,22 @@
   "description": "## Директории",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/IxxyDev/express-mesto.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Yaroslav Denisenko",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/IxxyDev/express-mesto/issues"
   },
   "homepage": "https://github.com/IxxyDev/express-mesto#readme",
   "dependencies": {
-    "express": "^4.17.1",
-    "jscs": "^3.0.7"
+    "express": "^4.17.1"
   },
   "devDependencies": {
     "eslint": "^7.7.0",
