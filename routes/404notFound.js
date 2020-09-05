@@ -3,7 +3,7 @@ const notFoundRouter = require('express').Router();
 notFoundRouter.all('/', (req, res) => {
   res
     .status(404)
-    .send({ message: 'Страница не найдена' });
+    .send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
 module.exports = notFoundRouter;

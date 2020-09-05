@@ -14,7 +14,8 @@ const getUsers = (req, res) => getFile(path.join(__dirname, '../data/users.json'
 
 const getUser = (req, res) => getFile(path.join(__dirname, '../data/users.json'))
   .then((user) => {
-    const currentUser = JSON.parse(user.find((item) => item._id === req.params.id));
+    const userData = JSON.parse(user);
+    const currentUser = userData.find((item) => item._id === req.params.id);
     if (currentUser) {
       return res
         .status(200)
@@ -22,7 +23,7 @@ const getUser = (req, res) => getFile(path.join(__dirname, '../data/users.json')
     }
     return res
       .status(404)
-      .send({ message: 'Такого пользователя нет' });
+      .send({ message: 'Нет пользователя с таким id' });
   })
   .catch((err) => {
     res
