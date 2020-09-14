@@ -1,5 +1,5 @@
 const { mongoose } = require('mongoose');
-const { regExpUrl } = require('../helpers/validators');
+const { validateUrl } = require('../helpers/validators');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: true,
+    validate: {
+      validator: (url) => validateUrl(url),
+      message: 'Enter valid URL',
+    },
   },
 });
 
