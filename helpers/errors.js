@@ -9,12 +9,12 @@ const createNotFoundErr = (error, message) => {
   throw new NotFoundErr({ message: `${message} : ${error.message}` });
 };
 
-const errHandler = (error, message) => {
+const errHandler = (error, messageBadReq, messageNotFound) => {
   if (error.name === 'CastError') {
-    createNotFoundErr(error, message);
+    createNotFoundErr(error, messageNotFound);
   }
 
-  createBadRequestErr(error, message);
+  createBadRequestErr(error, messageBadReq);
 };
 
 module.exports = {
