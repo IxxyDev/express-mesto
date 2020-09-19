@@ -3,18 +3,17 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const app = express();
+const { PORT = 3000 } = process.env;
+const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
+const cardsRouter = require('./routes/cards');
+const usersRouter = require('./routes/users');
+const notFoundRouter = require('./routes/404notFound');
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
-
-const { PORT = 3000 } = process.env;
-const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
-const cardsRouter = require('./routes/cards');
-const usersRouter = require('./routes/users');
-const notFoundRouter = require('./routes/404notFound');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/cards', cardsRouter);
