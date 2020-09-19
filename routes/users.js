@@ -5,7 +5,7 @@ const {
 
 const usersRouter = express.Router();
 usersRouter.get('/', getUsers);
-usersRouter.get('/:id', getUser);
+usersRouter.get('/:_id', getUser);
 usersRouter.post('/users', createUser);
 usersRouter.patch('/me', updateUser);
 usersRouter.patch('/me/avatar', updateUserAvatar);
