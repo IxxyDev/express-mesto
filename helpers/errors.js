@@ -1,24 +1,19 @@
-const BadRequestErr = require('../utils/BadRequestErr');
-const NotFoundErr = require('../utils/NotFoundErr');
+const { CustomErr } = require('../utils/CustomErr');
+const { ERROR_CODE } = require('../utils/constants');
 
-const createBadRequestErr = (error, message) => {
-  throw new BadRequestErr({ message: `${message} : ${error.message}` });
-};
-
-const createNotFoundErr = (error, message) => {
-  throw new NotFoundErr({ message: `${message} : ${error.message}` });
+const createError = (error, message, status) => {
+  throw new CustomErr({ message: `${message} : ${error.message}`, status });
 };
 
 const errHandler = (error, messageBadReq, messageNotFound) => {
   if (error.name === 'CastError') {
-    createNotFoundErr(error, messageNotFound);
+    createError(error, messageNotFound, ERROR_CODE.NOT_FOUND);
   }
 
-  createBadRequestErr(error, messageBadReq);
+  createError(error, messageBadReq, ERROR_CODE.INCORRECT_DATA);
 };
 
 module.exports = {
-  createBadRequestErr,
-  createNotFoundErr,
+  createError,
   errHandler,
 };
