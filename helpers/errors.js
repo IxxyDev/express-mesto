@@ -1,8 +1,8 @@
 const { CustomErr } = require('../utils/CustomErr');
 const { ERROR_CODE } = require('../utils/constants');
 
-const createError = (error, message, status) => {
-  throw new CustomErr({ message: `${message} : ${error.message}`, status });
+const createError = (error, msg, status) => {
+  throw new CustomErr({ message: `${msg} : ${error.msg}` }, status);
 };
 
 const errHandler = (error, messageBadReq, messageNotFound) => {
