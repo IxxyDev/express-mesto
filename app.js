@@ -32,11 +32,10 @@ app.use('/*', notFoundRouter);
 
 app.use((error, req, res, next) => {
   if (error.status !== ERROR_CODE.SERVER_ERROR) {
-    res.status(error.status).send(error.message);
+    res.status(error.status).send({ message: error.message });
     return;
   }
-  res.status(error.status).send(error.message);
-  next();
+  res.status(error.status).send({ message: `${ERROR_MESSAGE.SERVER_ERROR}` });
 });
 
 app.use((req, res) => {

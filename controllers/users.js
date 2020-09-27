@@ -24,7 +24,7 @@ const createUser = (req, res, next) => {
     .catch((error) => createError(
       error,
       ERROR_MESSAGE.INCORRECT_USER_DATA,
-      ERROR_CODE.INCORRECT_USER_DATA,
+      ERROR_CODE.INCORRECT_DATA,
     ))
     .catch(next);
 };
