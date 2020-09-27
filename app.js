@@ -36,6 +36,7 @@ app.use((error, req, res, next) => {
     return;
   }
   res.status(error.status).send({ message: `${ERROR_MESSAGE.SERVER_ERROR}` });
+  // теперь линтер страшно ругается на отсутствие next(), а из параметров тоже нельзя убрать
 });
 
 app.use((req, res) => {
