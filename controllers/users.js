@@ -42,10 +42,10 @@ const updateUser = (req, res, next) => {
     },
   )
     .orFail()
-    .then((user) => res.send({ data: user }))
     .catch((error) => errHandler(error,
       ERROR_MESSAGE.USER_NOT_FOUND,
       ERROR_MESSAGE.INCORRECT_USER_DATA))
+    .then((user) => res.send({ data: user }))
     .catch(next);
 };
 
