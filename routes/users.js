@@ -7,7 +7,7 @@ const usersRouter = express.Router();
 usersRouter.get('/', getUsers);
 usersRouter.get('/:_id', getUser);
 usersRouter.post('/', createUser);
-usersRouter.patch('/me', updateUser);
+usersRouter.patch('/:_id', updateUser);
 usersRouter.patch('/me/avatar', updateUserAvatar);
 
 module.exports = usersRouter;
