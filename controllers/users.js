@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const User = require('../models/user');
 const { createError, errHandler } = require('../helpers/errors');
 const { ERROR_MESSAGE, ERROR_CODE } = require('../utils/constants');
@@ -32,8 +33,10 @@ const createUser = (req, res, next) => {
 const updateUser = (req, res, next) => {
   const { name, about, avatar } = req.body;
 
+  const id = { _id: new mongoose.Types.ObjectId(req.user._id) };
+
   User.findByIdAndUpdate(
-    req.user._id,
+    id,
     { name, about, avatar },
     {
       new: true,
@@ -52,8 +55,10 @@ const updateUser = (req, res, next) => {
 const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
+  const id = { _id: new mongoose.Types.ObjectId(req.user._id) };
+
   User.findByIdAndUpdate(
-    req.user._id,
+    id,
     { avatar },
     {
       new: true,
