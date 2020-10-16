@@ -25,9 +25,19 @@ const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndRemove(cardId)
-    .orFail()
+    .orFail(createError(
+      {
+        message: ERROR_MESSAGE.INCORRECT_CARD_DATA,
+      },
+      ERROR_MESSAGE.CARD_NOT_FOUND,
+      ERROR_CODE.NOT_FOUND,
+    ))
     .then((card) => res.send({ data: card }))
-    .catch((error) => createError(error, ERROR_MESSAGE.CARD_NOT_FOUND, ERROR_CODE.NOT_FOUND))
+    .catch((err) => createError(
+      err,
+      ERROR_MESSAGE.CARD_NOT_FOUND,
+      ERROR_CODE.NOT_FOUND,
+    ))
     .catch(next);
 };
 
