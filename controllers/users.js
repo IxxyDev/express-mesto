@@ -67,7 +67,7 @@ const updateUserAvatar = (req, res, next) => {
     .orFail()
     .then((newAvatar) => res.send({ data: newAvatar }))
     .catch((error) => errHandler(error,
-      ERROR_MESSAGE.USER_NOT_FOUND,
+      ERROR_MESSAGE.INCORRECT_AVATAR_DATA,
       ERROR_MESSAGE.INCORRECT_USER_DATA))
     .catch(next);
 };

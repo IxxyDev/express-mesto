@@ -25,7 +25,7 @@ const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndRemove(cardId)
-    .orFail(createError(
+    .orFail(() => createError(
       {
         message: ERROR_MESSAGE.INCORRECT_CARD_DATA,
       },
