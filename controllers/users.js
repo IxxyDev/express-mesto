@@ -31,16 +31,14 @@ const createUser = (req, res, next) => {
 };
 
 const updateUser = (req, res, next) => {
-  const { name, about, avatar } = req.body;
-  const id = { _id: new mongoose.Types.ObjectId(req.user._id) };
+  const { name, about } = req.body;
 
   User.findByIdAndUpdate(
-    id,
-    { name, about, avatar },
+    req.user._id,
+    { name, about },
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .orFail()
