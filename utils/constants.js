@@ -7,6 +7,7 @@ const ERROR_MESSAGE = {
   SERVER_ERROR: 'Ошибка сервера',
   NOT_FOUND: 'Запрошенный ресурс не найден',
   CONFLICT: 'Пользователь с такими данным уже зарегистрирован',
+  INCORRECT_LOGIN_DATA: 'Неверный email или пароль',
 };
 
 const ERROR_CODE = {
@@ -14,6 +15,7 @@ const ERROR_CODE = {
   NOT_FOUND: 404,
   SERVER_ERROR: 500,
   CONFLICT: 409,
+  UNATHORIZED: 401,
 };
 
 module.exports = {
