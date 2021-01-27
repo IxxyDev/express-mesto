@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { createError, errHandler } = require('../helpers/errors');
 const { ERROR_MESSAGE, ERROR_CODE } = require('../utils/constants');
+
+const { TOKEN_SECRET_KEY = 'token-secret-key' } = process.env;
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -81,10 +84,25 @@ const updateUserAvatar = (req, res, next) => {
     .catch(next);
 };
 
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, TOKEN_SECRET_KEY, { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch((error) => next(createError(
+      error,
+      ERROR_MESSAGE.INCORRECT_LOGIN_DATA,
+      ERROR_CODE.UNATHORIZED,
+    )));
+};
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   updateUserAvatar,
+  login,
 };
