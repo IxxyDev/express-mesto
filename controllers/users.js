@@ -21,7 +21,14 @@ const getUserById = (req, res, next) => {
     .catch(next);
 };
 
-const getMe
+const getMe = (req, res, next) => {
+  const { _id: userId } = req.user;
+  User.findById(userId)
+    .orFail()
+    .then((user) => res.send({ data: user }))
+    .catch((error) => createError(error, ERROR_MESSAGE.USER_NOT_FOUND, ERROR_CODE.NOT_FOUND))
+    .catch(next);
+};
 
 const createUser = (req, res, next) => {
   const {

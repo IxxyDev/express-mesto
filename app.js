@@ -5,6 +5,7 @@ const { celebrate, Joi, CelebrateError } = require('celebrate');
 const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
+const auth = require('./middlewares/auth.js');
 const { createUser, login } = require('./controllers/users.js');
 const notFoundRouter = require('./routes/404notFound');
 
@@ -38,8 +39,8 @@ const userJoiSchema = {
 app.post('/signup', celebrate(userJoiSchema), createUser);
 app.post('/signin', celebrate(userJoiSchema), login);
 
-app.use('/cards', cardsRouter);
-app.use('/users', usersRouter);
+app.use('/cards', auth, cardsRouter);
+app.use('/users', auth, usersRouter);
 app.use('/*', notFoundRouter);
 
 app.use((error, req, res, next) => {
