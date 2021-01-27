@@ -1,11 +1,12 @@
 const express = require('express');
 const {
-  getUsers, getUser, updateUser, updateUserAvatar,
+  getUsers, getMe, getUserById, updateUser, updateUserAvatar,
 } = require('../controllers/users.js');
 
 const usersRouter = express.Router();
 usersRouter.get('/', getUsers);
-usersRouter.get('/:_id', getUser);
+usersRouter.get('/me', getMe);
+usersRouter.get('/:_id', getUserById);
 usersRouter.patch('/me', updateUser);
 usersRouter.patch('/me/avatar', updateUserAvatar);
 

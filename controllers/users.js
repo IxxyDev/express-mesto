@@ -13,13 +13,15 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-const getUser = (req, res, next) => {
+const getUserById = (req, res, next) => {
   User.findById(req.params._id)
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((error) => createError(error, ERROR_MESSAGE.USER_NOT_FOUND, ERROR_CODE.NOT_FOUND))
     .catch(next);
 };
+
+const getMe
 
 const createUser = (req, res, next) => {
   const {
@@ -100,7 +102,8 @@ const login = (req, res, next) => {
 
 module.exports = {
   getUsers,
-  getUser,
+  getMe,
+  getUserById,
   createUser,
   updateUser,
   updateUserAvatar,
