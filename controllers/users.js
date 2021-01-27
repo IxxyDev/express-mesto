@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const { createError, errHandler } = require('../helpers/errors');
 const { ERROR_MESSAGE, ERROR_CODE } = require('../utils/constants');
@@ -18,16 +19,26 @@ const getUser = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name, about, email, password, avatar,
+  } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
-    .catch((error) => createError(
-      error,
-      ERROR_MESSAGE.INCORRECT_USER_DATA,
-      ERROR_CODE.INCORRECT_DATA,
-    ))
-    .catch(next);
+  bcrypt.hash(password, 10)
+    .then((hash) => {
+      User.create({
+        name, about, email, password: hash, avatar,
+      })
+        .then((user) => {
+          const userWithNoPassword = user;
+          userWithNoPassword.password = '';
+          res.status(201).send({ data: userWithNoPassword });
+        })
+        .catch((error) => {
+          if (error.name === 'MongoError' && error.code === 11000) {
+            next(createError(error, ERROR_MESSAGE.CONFLICT, ERROR_CODE.CONFLICT));
+          } else next(error);
+        });
+    });
 };
 
 const updateUser = (req, res, next) => {
