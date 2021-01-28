@@ -1,14 +1,16 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, CelebrateError } = require('celebrate');
-const { ERROR_CODE, ERROR_MESSAGE } = require('./utils/constants');
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 const auth = require('./middlewares/auth.js');
 const { createUser, login } = require('./controllers/users.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { createError } = require('./errors/errors');
+const NotFoundError = require('./errors/NotFoundError');
+const BadReqError = require('./errors/BadReqError');
 
 const app = express();
 const { PORT = 3005 } = process.env;
@@ -22,6 +24,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(requestLogger);
 
 const userJoiSchema = {
@@ -44,7 +47,7 @@ app.use('/cards', auth, cardsRouter);
 app.use('/users', auth, usersRouter);
 
 app.all('/*', (req, res, next) => {
-  next(createError(ERROR_MESSAGE.NOT_FOUND, ERROR_CODE.NOT_FOUND));
+  next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
 app.use(errorLogger);
@@ -52,7 +55,7 @@ app.use(errorLogger);
 app.use((error, req, res, next) => {
   let err = error;
   if (err instanceof CelebrateError) {
-    err = createError(err, ERROR_MESSAGE.BAD_REQUEST, ERROR_CODE.INCORRECT_DATA);
+    err = new BadReqError();
   }
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
