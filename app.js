@@ -8,6 +8,7 @@ const usersRouter = require('./routes/users');
 const auth = require('./middlewares/auth.js');
 const { createUser, login } = require('./controllers/users.js');
 const notFoundRouter = require('./routes/404notFound');
+const { createError } = require('./helpers/errors');
 
 const app = express();
 const { PORT = 3005 } = process.env;
@@ -16,14 +17,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
-});
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '5f66130222d3be8d7f38bc58',
-  };
-
-  next();
 });
 
 app.use(bodyParser.json());
@@ -44,7 +37,9 @@ app.use('/users', auth, usersRouter);
 app.use('/*', notFoundRouter);
 
 app.use((error, req, res, next) => {
-  if (error.status !== ERROR_CODE.SERVER_ERROR) {
+  let err = error;
+  if (err instanceof CelebrateError) {
+    err = createError(err, ERROR_MESSAGE.BAD_REQUEST, ERROR_CODE.INCORRECT_DATA);
     res.status(error.status).send({ message: error.message });
     return;
   }

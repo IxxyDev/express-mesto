@@ -8,6 +8,7 @@ const ERROR_MESSAGE = {
   NOT_FOUND: 'Запрошенный ресурс не найден',
   CONFLICT: 'Пользователь с такими данным уже зарегистрирован',
   INCORRECT_LOGIN_DATA: 'Неверный email или пароль',
+  BAD_REQUEST: 'Неверные параметры в запросе',
 };
 
 const ERROR_CODE = {
