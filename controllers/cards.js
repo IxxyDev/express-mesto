@@ -1,6 +1,7 @@
 const Card = require('../models/card');
-const { createError } = require('../helpers/errors');
-const { ERROR_MESSAGE, ERROR_CODE } = require('../utils/constants');
+const BadReqError = require('../errors/BadReqError');
+const ForbiddenError = require('../errors/ForbiddenError');
+const NotFoundError = require('../errors/NotFoundError');
 
 const getCards = (req, res, next) => {
   Card.find({})
@@ -13,35 +14,21 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send({ data: card }))
-    .catch((error) => createError(
-      error,
-      ERROR_MESSAGE.INCORRECT_CARD_DATA,
-      ERROR_CODE.INCORRECT_DATA,
-    ))
-    .catch(next);
+    .catch(() => next(new BadReqError()));
 };
 
 const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
 
   Card.findByIdAndRemove(cardId)
-    .orFail(() => createError(
-      {
-        message: ERROR_MESSAGE.INCORRECT_CARD_DATA,
-      },
-      ERROR_MESSAGE.CARD_NOT_FOUND,
-      ERROR_CODE.NOT_FOUND,
-    ))
+    .orFail(new NotFoundError('Карточка не нашлась'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        createError(ERROR_MESSAGE.FORBIDDEN, ERROR_CODE.FORBIDDEN);
+        throw new ForbiddenError('Нельзя удалить чужую карточку');
       }
+      card.remove()
+        .then((cardToRemove) => res.send({ data: cardToRemove }));
     })
-    .catch((err) => createError(
-      err,
-      ERROR_MESSAGE.CARD_NOT_FOUND,
-      ERROR_CODE.NOT_FOUND,
-    ))
     .catch(next);
 };
 
@@ -50,9 +37,8 @@ const likeCard = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
-  ).orFail()
+  ).orFail(new NotFoundError('Карточка не нашлась'))
     .then((likes) => res.send({ data: likes }))
-    .catch((error) => createError(error, ERROR_MESSAGE.CARD_NOT_FOUND, ERROR_CODE.NOT_FOUND))
     .catch(next);
 };
 
@@ -61,9 +47,8 @@ const unlikeCard = (req, res, next) => {
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
-  ).orFail()
+  ).orFail(new NotFoundError('Карточка не нашлась'))
     .then((likes) => res.send({ data: likes }))
-    .catch((error) => createError(error, ERROR_MESSAGE.CARD_NOT_FOUND, ERROR_CODE.NOT_FOUND))
     .catch(next);
 };
 

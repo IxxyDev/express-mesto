@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { createError, errHandler } = require('../helpers/errors');
-const { ERROR_MESSAGE, ERROR_CODE } = require('../utils/constants');
+const ConflictError = require('../errors/ConflictError');
+const NotFoundError = require('../errors/NotFoundError');
+const UnathorizedError = require('../errors/UnathorizedError');
 
 const { TOKEN_SECRET_KEY = 'token-secret-key' } = process.env;
 
@@ -15,18 +16,17 @@ const getUsers = (req, res, next) => {
 
 const getUserById = (req, res, next) => {
   User.findById(req.params._id)
-    .orFail()
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch((error) => createError(error, ERROR_MESSAGE.USER_NOT_FOUND, ERROR_CODE.NOT_FOUND))
+
     .catch(next);
 };
 
 const getMe = (req, res, next) => {
   const { _id: userId } = req.user;
   User.findById(userId)
-    .orFail()
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch((error) => createError(error, ERROR_MESSAGE.USER_NOT_FOUND, ERROR_CODE.NOT_FOUND))
     .catch(next);
 };
 
@@ -47,7 +47,7 @@ const createUser = (req, res, next) => {
         })
         .catch((error) => {
           if (error.name === 'MongoError' && error.code === 11000) {
-            next(createError(error, ERROR_MESSAGE.CONFLICT, ERROR_CODE.CONFLICT));
+            next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
           } else next(error);
         });
     });
@@ -64,10 +64,7 @@ const updateUser = (req, res, next) => {
       runValidators: true,
     },
   )
-    .orFail()
-    .catch((error) => errHandler(error,
-      ERROR_MESSAGE.USER_NOT_FOUND,
-      ERROR_MESSAGE.INCORRECT_USER_DATA))
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
     .catch(next);
 };
@@ -85,11 +82,8 @@ const updateUserAvatar = (req, res, next) => {
       upsert: true,
     },
   )
-    .orFail()
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((newAvatar) => res.send({ data: newAvatar }))
-    .catch((error) => errHandler(error,
-      ERROR_MESSAGE.INCORRECT_AVATAR_DATA,
-      ERROR_MESSAGE.INCORRECT_USER_DATA))
     .catch(next);
 };
 
@@ -100,11 +94,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, TOKEN_SECRET_KEY, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((error) => next(createError(
-      error,
-      ERROR_MESSAGE.INCORRECT_LOGIN_DATA,
-      ERROR_CODE.UNATHORIZED,
-    )));
+    .catch(() => next(new UnathorizedError('Неверный email или пароль')));
 };
 
 module.exports = {
