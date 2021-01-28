@@ -9,6 +9,7 @@ const ERROR_MESSAGE = {
   CONFLICT: 'Пользователь с такими данным уже зарегистрирован',
   INCORRECT_LOGIN_DATA: 'Неверный email или пароль',
   BAD_REQUEST: 'Неверные параметры в запросе',
+  FORBIDDEN: 'Нельзя удалить чужую карточку',
 };
 
 const ERROR_CODE = {
@@ -17,6 +18,7 @@ const ERROR_CODE = {
   SERVER_ERROR: 500,
   CONFLICT: 409,
   UNATHORIZED: 401,
+  FORBIDDEN: 403,
 };
 
 module.exports = {

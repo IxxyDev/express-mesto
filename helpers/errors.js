@@ -1,7 +1,7 @@
 const { CustomErr } = require('../utils/CustomErr');
 const { ERROR_CODE } = require('../utils/constants');
 
-const createError = (error, msg, statusCode) => {
+const createError = (error = 'Ошибка', msg, statusCode) => {
   throw new CustomErr(`${msg} : ${error.message}`, statusCode);
 };
 

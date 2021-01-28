@@ -32,7 +32,11 @@ const deleteCard = (req, res, next) => {
       ERROR_MESSAGE.CARD_NOT_FOUND,
       ERROR_CODE.NOT_FOUND,
     ))
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (card.owner.toString() !== req.user._id) {
+        createError(ERROR_MESSAGE.FORBIDDEN, ERROR_CODE.FORBIDDEN);
+      }
+    })
     .catch((err) => createError(
       err,
       ERROR_MESSAGE.CARD_NOT_FOUND,
