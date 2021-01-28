@@ -7,7 +7,7 @@ const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 const auth = require('./middlewares/auth.js');
 const { createUser, login } = require('./controllers/users.js');
-const notFoundRouter = require('./routes/404notFound');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { createError } = require('./helpers/errors');
 
 const app = express();
@@ -21,6 +21,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(requestLogger);
 
 const userJoiSchema = {
   body: Joi.object().keys({
@@ -40,7 +41,9 @@ app.post('/signin', celebrate(userJoiSchema), login);
 
 app.use('/cards', auth, cardsRouter);
 app.use('/users', auth, usersRouter);
-app.use('/*', notFoundRouter);
+app.all('/*', (req, res, next) => {
+  next(createError(ERROR_MESSAGE.NOT_FOUND, ERROR_CODE.NOT_FOUND));
+});
 
 app.use((error, req, res, next) => {
   let err = error;
@@ -51,6 +54,8 @@ app.use((error, req, res, next) => {
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
 });
+
+app.use(errorLogger);
 
 app.use((req, res) => {
   res
