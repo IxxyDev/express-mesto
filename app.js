@@ -41,9 +41,12 @@ app.post('/signin', celebrate(userJoiSchema), login);
 
 app.use('/cards', auth, cardsRouter);
 app.use('/users', auth, usersRouter);
+
 app.all('/*', (req, res, next) => {
   next(createError(ERROR_MESSAGE.NOT_FOUND, ERROR_CODE.NOT_FOUND));
 });
+
+app.use(errorLogger);
 
 app.use((error, req, res, next) => {
   let err = error;
@@ -53,14 +56,6 @@ app.use((error, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
   next();
-});
-
-app.use(errorLogger);
-
-app.use((req, res) => {
-  res
-    .status(ERROR_CODE.NOT_FOUND)
-    .send({ message: ERROR_MESSAGE.NOT_FOUND });
 });
 
 app.listen(PORT, () => {
