@@ -29,6 +29,12 @@ const userJoiSchema = {
   }),
 };
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.post('/signup', celebrate(userJoiSchema), createUser);
 app.post('/signin', celebrate(userJoiSchema), login);
 
@@ -40,11 +46,10 @@ app.use((error, req, res, next) => {
   let err = error;
   if (err instanceof CelebrateError) {
     err = createError(err, ERROR_MESSAGE.BAD_REQUEST, ERROR_CODE.INCORRECT_DATA);
-    res.status(error.status).send({ message: error.message });
-    return;
   }
-  res.status(error.status).send({ message: `${ERROR_MESSAGE.SERVER_ERROR}` });
-  // теперь линтер страшно ругается на отсутствие next(), а из параметров тоже нельзя убрать
+  const { statusCode = 500, message } = err;
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+  next();
 });
 
 app.use((req, res) => {
