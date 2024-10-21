@@ -19,23 +19,23 @@
   },
   "homepage": "https://github.com/IxxyDev/express-mesto#readme",
   "dependencies": {
-    "bcrypt": "^5.0.0",
-    "body-parser": "^1.19.0",
-    "celebrate": "^13.0.4",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "celebrate": "^15.0.3",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-winston": "^4.0.5",
-    "jsonwebtoken": "^9.0.0",
-    "mongoose": "^5.13.20",
-    "validator": "^13.7.0",
-    "winston": "^3.3.3"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-winston": "^4.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.2",
+    "validator": "^13.12.0",
+    "winston": "^3.15.0"
   },
   "devDependencies": {
-    "eslint": "^7.18.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "nodemon": "^2.0.7"
+    "eslint": "^9.13.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0",
+    "nodemon": "^3.1.7"
   }
 }
